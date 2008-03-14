@@ -26,7 +26,7 @@
 #define APP_CODE_NAME       "keepassx"
 #define APP_SHORT_FUNC      "Password Manager"
 #define APP_LONG_FUNC       "Cross Platform Password Manager"
-#define APP_VERSION         "0.3.0a"
+#define APP_VERSION         "0.3.1"
 
 #define BUILTIN_ICONS 65
 
@@ -84,7 +84,6 @@
 #include "crypto/yarrow.h"
 #include "lib/bookmarks.h"
 #include "lib/FileDialogs.h"
-#include "lib/random.h"
 #include "lib/SecString.h"
 #include "lib/tools.h"
 #include "lib/UrlLabel.h"
@@ -103,6 +102,7 @@ extern bool TrActive;
 extern QString DetailViewTemplate;
 extern QPixmap *EntryIcons;
 extern bool EventOccurred;
+extern bool EventOccurredBlock;
 
 #endif //__cplusplus
 #endif //KEEPASS_X_
