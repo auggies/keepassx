@@ -558,8 +558,9 @@ if(Algorithm == Rijndael_Cipher){
 }
 else if(Algorithm == Twofish_Cipher){
 	CTwofish twofish;
-	if (twofish.init(FinalKey, 32, EncryptionIV) != true)
+	if (twofish.init(FinalKey, 32, EncryptionIV) != true){
 		LOAD_RETURN_CLEANUP
+	}
 	crypto_size = (unsigned long)twofish.padDecrypt((quint8 *)buffer + DB_HEADER_SIZE,
 	total_size - DB_HEADER_SIZE, (quint8 *)buffer + DB_HEADER_SIZE);
 }
