@@ -25,7 +25,7 @@ int HelperX11::getModifiers(Display *d,KeySym keysym, int keycode){
 	int SymsPerKey;
 	KeySym* Syms=XGetKeyboardMapping(d,keycode,1,&SymsPerKey);
 	int c=-1;
-	for(int i=0;i<4;i++)
+	for(int i=0;i<SymsPerKey;i++)
 		if(Syms[i]==keysym){
 			c=i; break;
 		}
