@@ -1,4 +1,10 @@
 ---------------
+    0.3.4
+---------------
+- fixed crash when auto-typing special characters (Bug #2111588)
+- only allow plain text in comment field
+
+---------------
     0.3.3
 ---------------
 - fixed error when opening twofish encrypted databases (Bug #2025075)

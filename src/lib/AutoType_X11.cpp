@@ -134,6 +134,10 @@ void AutoType::perform(IEntryHandle* entry, QString& err,bool hideWindow,int nr)
 				break;
 			}
 			int mods=HelperX11::getModifiers(pDisplay,Keys[i].data,keycode);
+			if (mods==-1){
+				err = QCoreApplication::translate("AutoType","Auto-Type string contains invalid characters");
+				break;
+			}
 			HelperX11::pressModifiers(pDisplay,mods);
 			AutoTypePrivate::sleepKeyStrokeDelay();
 			XTestFakeKeyEvent(pDisplay,keycode,True,0);
