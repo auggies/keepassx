@@ -48,7 +48,7 @@ class CGenPwDialog : public QDialog, public Ui_GenPwDlg
 		void estimateQuality();
 		void OnCollectEntropyChanged(int);
 		void OnCharsChanged(const QString& str);
-		
+		void setGenCharList();
 };
 
 #endif

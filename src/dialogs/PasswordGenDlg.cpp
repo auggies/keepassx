@@ -44,6 +44,7 @@ CGenPwDialog::CGenPwDialog(QWidget* parent, bool StandAloneMode,Qt::WFlags fl)
 	connect(Check_CollectEntropy,SIGNAL(stateChanged(int)),this,SLOT(OnCollectEntropyChanged(int)));
 	connect(Edit_chars,SIGNAL(textChanged(const QString&)),this,SLOT(estimateQuality()));
 	connect(Edit_chars,SIGNAL(textEdited(const QString&)),this,SLOT(OnCharsChanged(const QString&)));
+	connect(ButtonSaveRandChars, SIGNAL(clicked()), SLOT(setGenCharList()));
 
 	if(!StandAloneMode){
 		AcceptButton=DialogButtons->addButton(QDialogButtonBox::Ok);
@@ -74,6 +75,9 @@ CGenPwDialog::CGenPwDialog(QWidget* parent, bool StandAloneMode,Qt::WFlags fl)
 	setMaximumSize(size());
 	setMinimumSize(size());
 	createBanner(&BannerPixmap,getPixmap("dice"),tr("Password Generator"),width());
+
+	if(config->pwGenCharList() != "")
+		Edit_chars->setText(config->pwGenCharList());
 }
 
 CGenPwDialog::~CGenPwDialog(){
@@ -122,10 +126,14 @@ void CGenPwDialog::OnRadio1StateChanged(bool state)
 }
 
 void CGenPwDialog::OnRadio2StateChanged(bool state){
-	if(state)
+	if(state) {
 		Edit_chars->setEnabled(true);
-	else
+		ButtonSaveRandChars->setEnabled(true);
+	}
+	else {
 		Edit_chars->setDisabled(true);
+		ButtonSaveRandChars->setDisabled(true);
+	}
 
 	estimateQuality();
 }
@@ -295,4 +303,8 @@ void CGenPwDialog::OnCollectEntropyChanged(int state){
 	else
 		Check_CollectOncePerSession->setDisabled(true);
 
+}
+
+void CGenPwDialog::setGenCharList(){
+	config->setPwGenCharList(Edit_chars->text());
 }
