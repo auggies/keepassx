@@ -62,6 +62,7 @@ unix : !macx : !isEqual(QMAKE_WIN32,1){
 #   Platform Specific: MacOS X
 #-------------------------------------------------------------------------------
 macx {
+    QMAKE_INFO_PLIST= ../share/macx_bundle/Info.plist
     isEmpty(PREFIX): PREFIX = /Applications
     TARGET = ../bin/KeePassX
     target.path = $${PREFIX}
