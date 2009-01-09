@@ -1011,7 +1011,9 @@ void KeepassMainWindow::hideEvent(QHideEvent* event){
 
 void KeepassMainWindow::showEvent(QShowEvent* event){
 	if (IsLocked && !InUnLock && event->spontaneous()){
+#ifndef Q_WS_MAC
 		showNormal(); // workaround for some graphic glitches
+#endif
 		OnUnLockWorkspace();
 	}
 	
