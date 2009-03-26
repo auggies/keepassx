@@ -155,9 +155,13 @@ void KeepassEntryView::OnDeleteEntry(){
 	IGroupHandle* bGroup;
 	if (config->backup() && ((EntryViewItem*)entries[0])->EntryHandle->group() != (bGroup=db->backupGroup()))
 		backup = true;
+	if (backup && !bGroup) {
+		emit requestCreateGroup("Backup", 4, NULL);
+		bGroup = db->backupGroup();
+	}
 	for(int i=0; i<entries.size();i++){
 		IEntryHandle* entryHandle = ((EntryViewItem*)entries[i])->EntryHandle;
-		if (backup){
+		if (backup && bGroup){
 			db->moveEntry(entryHandle, bGroup);
 			QDateTime now = QDateTime::currentDateTime();
 			entryHandle->setLastAccess(now);
@@ -276,10 +280,9 @@ void KeepassEntryView::OnNewEntry(){
 }
 
 void KeepassEntryView::OnEntryActivated(QTreeWidgetItem* item,int Column){
+	Q_UNUSED(item);
+	
 	switch (columnListIndex(Column)){
-		case 0:
-			editEntry((EntryViewItem*)item);
-			break;
 		case 1:
 			OnUsernameToClipboard();
 			break;
@@ -290,7 +293,11 @@ void KeepassEntryView::OnEntryActivated(QTreeWidgetItem* item,int Column){
 			OnPasswordToClipboard();
 			break;
 	}
+}
 
+void KeepassEntryView::OnEntryDblClicked(QTreeWidgetItem* item,int Column){
+	if (columnListIndex(Column) == 0)
+		editEntry((EntryViewItem*)item);
 }
 
 void KeepassEntryView::OnEditEntry(){

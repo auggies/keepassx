@@ -190,6 +190,7 @@ void KeepassMainWindow::setupConnections(){
 	connect(HelpAboutAction,SIGNAL(triggered()),this,SLOT(OnHelpAbout()));
 
 	connect(EntryView,SIGNAL(itemActivated(QTreeWidgetItem*,int)),EntryView,SLOT(OnEntryActivated(QTreeWidgetItem*,int)));
+	connect(EntryView,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),EntryView,SLOT(OnEntryDblClicked(QTreeWidgetItem*,int)));
 	connect(QuickSearchEdit,SIGNAL(returnPressed()), this, SLOT(OnQuickSearch()));
 	connect(GroupView,SIGNAL(groupChanged(IGroupHandle*)),EntryView,SLOT(OnGroupChanged(IGroupHandle*)));
 	connect(GroupView,SIGNAL(groupChanged(IGroupHandle*)),this,SLOT(OnGroupSelectionChanged(IGroupHandle*)));
@@ -583,11 +584,13 @@ void KeepassMainWindow::OnFileNewKdb(){
 	}
 }
 
-// TODO Kxdb
-/*
-void KeepassMainWindow::OnFileNewKxdb(){
+void KeepassMainWindow::openFile(const QString& filename) {
+	if(FileOpen) {
+		if(!closeDatabase())
+			return;
+	}
+	openDatabase(filename);
 }
-*/
 
 void KeepassMainWindow::OnFileOpen(){
 	/*QFileDialog FileDlg(this,tr("Open Database..."),QDir::homePath());
@@ -598,10 +601,8 @@ void KeepassMainWindow::OnFileOpen(){
 	if(!FileDlg.selectedFiles().size())return;*/
 	QString filename=KpxFileDialogs::openExistingFile(this,"MainWindow_FileOpen",
 			tr("Open Database..."),QStringList()<<tr("KeePass Databases (*.kdb)")<< tr("All Files (*)"));
-	if(filename.isEmpty())return;
-	if(FileOpen)
-		if(!closeDatabase())return;
-	openDatabase(filename);
+	if (!filename.isEmpty())
+		openFile(filename);
 }
 
 void KeepassMainWindow::OnFileClose(){
@@ -656,7 +657,8 @@ void KeepassMainWindow::setStateFileOpen(bool IsOpen){
 
 void KeepassMainWindow::setStateFileModified(bool mod){
 	if (config->autoSaveChange() && mod && db->file()){
-		OnFileSave();
+		if (OnFileSave())
+			return; // return on success, so we don't set the state to modified
 	}
 	
 	ModFlag=mod;
@@ -1101,6 +1103,7 @@ void KeepassMainWindow::OnExtrasSettings(){
 	if (config->language() != oldLang){
 		retranslateUi(this);
 		WorkspaceLockedWidget.retranslateUi(LockedCentralWidget);
+		ViewShowToolbarAction->setText(tr("Show &Toolbar"));
 		EntryView->updateColumns();
 		if (FileOpen) {
 			if (db->file())
